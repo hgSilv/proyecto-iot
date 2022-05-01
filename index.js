@@ -1,5 +1,4 @@
 const { spawn } = require('child_process');
-const { type } = require('express/lib/response');
 
 function run(name, command, args) {
     const process = spawn(command, args);
@@ -19,8 +18,10 @@ function runMQTT() {
     // collect data from script
     process.stdout.on('data', function (data) {
         var message = data.toString().trim();
-        if (message == 'release treat')
-            console.log('treat is released');
+        if (message == 'release treat') {
+            console.log('start edge-impulse');
+            run("runner", 'node', ['/lib/node_modules/edge-impulse-linux/build/cli/linux/runner.js'])
+        }
         else
             console.log('no treat');
     });
@@ -33,4 +34,4 @@ function runMQTT() {
 // run("script1", 'python3', ['script1.py']);
 // run("script2", 'python3', ['script2.py']);
 // run("runner", 'node', ['/lib/node_modules/edge-impulse-linux/build/cli/linux/runner.js'])
-// runMQTT();
+runMQTT();
