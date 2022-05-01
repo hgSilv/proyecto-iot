@@ -9,6 +9,8 @@ function runMQTT() {
             console.log('start edge-impulse');
             run_edge();
         }
+        else if (message == 'release treat')
+            run_servo();
         else
             console.log('no treat');
     });
@@ -25,7 +27,7 @@ function run_edge() {
         let output = data.toString().trim();
         if (output == 'Dog detected, activating servo') {
             console.log(output);
-            run_script('servo', 'python', ['servopi.py']);
+            run_servo();
         }
     });
     // in close event we are sure that stream from child process is closed
@@ -34,8 +36,8 @@ function run_edge() {
     });
 }
 
-function run_script(name, command, args) {
-    const process = spawn(command, args);
+function run_servo() {
+    const process = spawn('python', ['servopi.py']);
     // collect data from script
     process.stdout.on('data', function (data) {
         // console.log('Running runner.js ...');
@@ -43,7 +45,7 @@ function run_script(name, command, args) {
     });
     // in close event we are sure that stream from child process is closed
     process.on('close', (code) => {
-        console.log(`child process close all stdio with code ${code} (${name})`);
+        console.log(`child process close all stdio with code ${code} (servo)`);
     });
 }
 
